@@ -270,9 +270,46 @@ class WebServer {
           builder.append("\n");
           builder.append("I am not sure what you want me to do...");
         }
+        } else if(request.contains("cipher?")) {
+            Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+            query_pairs = splitQuery(request.replace("cipher?", ""));
+            String hidden = "";
+            if(query_pairs.isEmpty() == true || query_pairs.containsKey("secret") == false || query_pairs.containsKey("shift") == false) {
+                builder.append("HTTP/1.1 406 Not Acceptable\n");
+                builder.append("Content-Type: text/html; charset=utf-8\n");
+                builder.append("\n");
+                builder.append("One or all required inputs not provided. Please provide inputs.");
+            }
+            else {
+            String info = query_pairs.get("secret");
+            try {
+                Integer shift = Integer.parseInt(query_pairs.get("shift"));
+                int length = info.length();
+                int i = 0;
+                while(i < length) {
+                    if ((char)(info.charAt(i) + shift) > 'z') {
+                        hidden += (char)(info.charAt(i) - (26-shift));
+                    }
+                    else {
+                        hidden += (char)(info.charAt(i) + shift);
+                    }
+                }
+                builder.append("HTTP/1.1 200 OK\n");
+                builder.append("Content-Type: text/html; charset=utf-8\n");
+                builder.append("\n");
+                builder.append("Secret has been hidden as " + hidden);
+                } catch(NumberFormatException ex){
+                    builder.append("HTTP/1.1 406 Not Acceptable\n");
+                    builder.append("Content-Type: text/html; charset=utf-8\n");
+                    builder.append("\n");
+                    builder.append("Shift was incorrect type. Please provide an integer.");
+                }
+            }
+        } else if(request.contains("?")) {
+            
         }
         // Output
-        response = builder.toString().getBytes();
+      response = builder.toString().getBytes();
       }
     } catch (IOException e) {
       e.printStackTrace();
