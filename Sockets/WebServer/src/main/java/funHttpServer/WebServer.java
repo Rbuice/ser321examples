@@ -202,17 +202,34 @@ class WebServer {
           query_pairs = splitQuery(request.replace("multiply?", ""));
 
           // extract required fields from parameters
-          Integer num1 = Integer.parseInt(query_pairs.get("num1"));
-          Integer num2 = Integer.parseInt(query_pairs.get("num2"));
+          
+          if(query_pairs.isEmpty() == true || query_pairs.containsKey("num1") == false || query_pairs.containsKey("num2") == false) {
+              builder.append("HTTP/1.1 406 Not Acceptable\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("One or all required inputs not provided. Please provide two integers.");
+          }
+          else{
+              try {
+              Integer num1 = Integer.parseInt(query_pairs.get("num1"));
+              Integer num2 = Integer.parseInt(query_pairs.get("num2"));
+           // do math
+              Integer result = num1 * num2;
 
-          // do math
-          Integer result = num1 * num2;
-
-          // Generate response
-          builder.append("HTTP/1.1 200 OK\n");
-          builder.append("Content-Type: text/html; charset=utf-8\n");
-          builder.append("\n");
-          builder.append("Result is: " + result);
+              // Generate response
+              builder.append("HTTP/1.1 200 OK\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Result is: " + result);
+          }catch (NumberFormatException ex) {
+              builder.append("HTTP/1.1 406 Not Acceptable\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("One or both queries were not integers. Please provide two integers.");
+          }
+          }
+          
+          
 
           // TODO: Include error handling here with a correct error code and
           // a response that makes sense
@@ -230,7 +247,6 @@ class WebServer {
           query_pairs = splitQuery(request.replace("github?", ""));
           String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
           System.out.println(json);
-
           builder.append("HTTP/1.1 200 OK\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
