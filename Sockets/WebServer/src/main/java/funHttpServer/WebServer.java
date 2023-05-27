@@ -319,6 +319,12 @@ class WebServer {
             try {
                 Integer dice = Integer.parseInt(query_pairs.get("dice"));
                 Integer amount = Integer.parseInt(query_pairs.get("amount"));
+                if(dice < 0) {
+                    dice = dice * -1;
+                }
+                if(amount < 0) {
+                    amount = amount * -1;
+                }
                 int total = 0;
                 Random random = new Random();
                 for(int i = 0; i < amount; i++) {
