@@ -293,6 +293,7 @@ class WebServer {
                     else {
                         hidden += (char)(info.charAt(i) + shift);
                     }
+                    i++;
                 }
                 builder.append("HTTP/1.1 200 OK\n");
                 builder.append("Content-Type: text/html; charset=utf-8\n");
