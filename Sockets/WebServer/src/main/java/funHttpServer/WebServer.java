@@ -306,8 +306,35 @@ class WebServer {
                     builder.append("Shift was incorrect type. Please provide an integer.");
                 }
             }
-        } else if(request.contains("?")) {
-            
+        } else if(request.contains("diceroll?")) {
+            Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+            query_pairs = splitQuery(request.replace("diceroll?", ""));
+            if(query_pairs.isEmpty() == true || query_pairs.containsKey("dice") == false || query_pairs.containsKey("amount") == false) {
+                builder.append("HTTP/1.1 406 Not Acceptable\n");
+                builder.append("Content-Type: text/html; charset=utf-8\n");
+                builder.append("\n");
+                builder.append("One or all required inputs not provided. Please provide two integers.");
+            }
+            else {
+            try {
+                Integer dice = Integer.parseInt(query_pairs.get("dice"));
+                Integer amount = Integer.parseInt(query_pairs.get("amount"));
+                int total = 0;
+                Random random = new Random();
+                for(int i = 0; i < amount; i++) {
+                    total = total + random.nextInt(dice) + 1;
+                }
+                builder.append("HTTP/1.1 200 OK\n");
+                builder.append("Content-Type: text/html; charset=utf-8\n");
+                builder.append("\n");
+                builder.append("Rolled " + amount + " d" + dice + " for a total of " + total);
+            } catch (NumberFormatException ex) {
+                builder.append("HTTP/1.1 406 Not Acceptable\n");
+                builder.append("Content-Type: text/html; charset=utf-8\n");
+                builder.append("\n");
+                builder.append("One or both queries were not integers. Please provide two integers.");
+            }
+            }
         }
         // Output
       response = builder.toString().getBytes();
