@@ -249,7 +249,7 @@ class WebServer {
               builder.append("HTTP/1.1 406 Not Acceptable\n");
               builder.append("Content-Type: text/html; charset=utf-8\n");
               builder.append("\n");
-              builder.append("Query was not provide. Please provide a query that follows GitHub's REST API");
+              builder.append("Query was not provided. Please provide a query that follows GitHub's REST API");
           }
           else if (query_pairs.containsKey("query") == true) {
               String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
