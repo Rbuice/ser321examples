@@ -173,7 +173,7 @@ class WebServer {
           builder.append("HTTP/1.1 200 OK\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
-          builder.append(new String(readFileInBytes(file)));
+          builder.append("Would theoretically be a file but removed this part, you do not have to do anything with it for the assignment");
 
         } else if (request.contains("file/")) {
           // tries to find the specified file and shows it or shows an error
